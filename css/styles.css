@@ -101,7 +101,8 @@ html, body {
   outline: none;
 }
 
-.pokedex-navbar {
+.pokedex-navbar,
+.favorites-navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
