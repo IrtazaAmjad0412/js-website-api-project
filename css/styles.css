@@ -4,13 +4,14 @@
   box-sizing: border-box;
 }
 
-html,
-body {
+/*
+May remove later if not needed.
+html, body {
   height: 100%;
-  margin: 0;
-}
+} 
+*/
 
-.main-menu {
+.main-menu-navbar {
   width: 100vw;
   height: 100vh;
   background: linear-gradient(to bottom, red 50%, white 50%);
@@ -18,7 +19,7 @@ body {
   overflow: hidden;
 }
 
-.main-menu::before {
+.main-menu-navbar::before {
   content: "";
   position: absolute;
   top: 50%;
@@ -42,7 +43,7 @@ body {
   z-index: 3;
 }
 
-.main-menu::after {
+.main-menu-navbar::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -56,28 +57,35 @@ body {
   z-index: 4;
 }
 
-.main-menu-title {
-  display: flex;
-  justify-content: center;
-  margin-top: 2rem;
+.nav-header {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 5rem;
+  font-size: 3.5rem;
   color: #3761a8;
 }
 
-.main-menu-buttons {
+.main-menu-navbar .nav-header {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  font-size: 5rem;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 6rem;
+  width: 40%;
+}
+
+.main-menu-navbar .nav-buttons {
   position: absolute;
   top: 75%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: flex;
-  gap: 6rem;
   justify-content: center;
-  width: 100%;
   max-width: 37.5rem;
 }
 
-.main-menu-btn {
+.nav-btn {
   flex: 1;
   padding: 0.75rem 1.5rem;
   border-radius: 0.75rem;
@@ -88,7 +96,15 @@ body {
   background-color: #3761a8;
 }
 
-.main-menu-btn:hover {
+.nav-btn:hover {
   background-color: #2c4a7a;
   outline: none;
+}
+
+.pokedex-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.875rem;
+  background-color: #feca1b;
 }
