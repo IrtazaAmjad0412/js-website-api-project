@@ -16,16 +16,20 @@ const getPokemonData = async () => {
   return detailedPokeArr;
 };
 
-const loadAndDisplayPokemon = async () => {
-  const detailedPokeArr = await getPokemonData();
-  detailedPokeArr.forEach((cardData) =>
-    createPokeCard(
-      cardData.name,
-      cardData.sprites.other["official-artwork"].front_default,
-      cardData.abilities,
-      cardData.stats
-    )
-  );
+const getAbilities = (data) => {
+  let abilitiesStr = `Abilities: `;
+  for (const ability of data) {
+    abilitiesStr += `${ability.ability.name} `;
+  }
+  return abilitiesStr;
+};
+
+const getStats = (data) => {
+  let statsStr = `Stats: `;
+  for (const stats of data) {
+    statsStr += `${stats.base_stat} `;
+  }
+  return statsStr;
 };
 
 const createPokeCard = (name, imgSrc, abilities, stats) => {
@@ -50,6 +54,18 @@ const createPokeCard = (name, imgSrc, abilities, stats) => {
   details.append(pokeAbilities, pokeStats);
   card.append(image, details);
   gallery.append(card);
+};
+
+const loadAndDisplayPokemon = async () => {
+  const detailedPokeArr = await getPokemonData();
+  detailedPokeArr.forEach((cardData) =>
+    createPokeCard(
+      cardData.name,
+      cardData.sprites.other["official-artwork"].front_default,
+      getAbilities(cardData.abilities),
+      getStats(cardData.stats)
+    )
+  );
 };
 
 loadAndDisplayPokemon();
