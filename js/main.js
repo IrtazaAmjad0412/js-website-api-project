@@ -16,6 +16,10 @@ const getPokemonData = async () => {
   return detailedPokeArr;
 };
 
+const capitalizeFirstLetter = (data) => {
+  return data[0].toUpperCase() + data.slice(1);
+};
+
 const getAbilities = (data) => {
   let abilitiesStr = `Abilities: `;
   for (const ability of data) {
@@ -64,7 +68,7 @@ const loadAndDisplayPokemon = async () => {
   const detailedPokeArr = await getPokemonData();
   detailedPokeArr.forEach((cardData) =>
     createPokeCard(
-      cardData.name,
+      capitalizeFirstLetter(cardData.name),
       cardData.sprites.other["official-artwork"].front_default,
       getAbilities(cardData.abilities),
       getStats(cardData.stats)
