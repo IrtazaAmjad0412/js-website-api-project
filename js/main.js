@@ -38,6 +38,10 @@ const createPokeCard = (name, imgSrc, abilities, stats) => {
   const card = document.createElement("div");
   card.className = "pokemon-card";
 
+  const title = document.createElement("div");
+  title.className = "pokemon-title";
+  title.textContent = name;
+
   const image = document.createElement("img");
   image.className = "pokemon-image";
   image.src = imgSrc;
@@ -52,7 +56,7 @@ const createPokeCard = (name, imgSrc, abilities, stats) => {
   pokeStats.textContent = stats;
 
   details.append(pokeAbilities, pokeStats);
-  card.append(image, details);
+  card.append(title, image, details);
   gallery.append(card);
 };
 
