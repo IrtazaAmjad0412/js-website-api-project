@@ -46,6 +46,9 @@ const createPokeCard = (name, imgSrc, abilities, stats) => {
   title.className = "pokemon-title";
   title.textContent = name;
 
+  const favorite = document.createElement("i");
+  favorite.classList.add("fa-solid", "fa-heart");
+
   const image = document.createElement("img");
   image.className = "pokemon-image";
   image.src = imgSrc;
@@ -60,7 +63,7 @@ const createPokeCard = (name, imgSrc, abilities, stats) => {
   pokeStats.textContent = stats;
 
   details.append(pokeAbilities, pokeStats);
-  card.append(title, image, details);
+  card.append(title, favorite, image, details);
   gallery.append(card);
 };
 
