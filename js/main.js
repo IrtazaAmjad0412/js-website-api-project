@@ -20,21 +20,10 @@ const capitalizeFirstLetter = (data) => {
   return data[0].toUpperCase() + data.slice(1);
 };
 
-const getAbilities = (data) => {
-  let abilitiesStr = `Abilities: `;
-  for (const ability of data) {
-    abilitiesStr += `${ability.ability.name} `;
-  }
-  return abilitiesStr;
-};
+const getAbilities = (data) =>
+  `Abilities: ${data.map((ability) => ability.ability.name).join(", ")}`;
 
-const getStats = (data) => {
-  let statsStr = `Stats: `;
-  for (const stats of data) {
-    statsStr += `${stats.base_stat} `;
-  }
-  return statsStr;
-};
+const getStats = (data) => `Stats: ${data.map((stat) => stat.base_stat).join(" ")}`;
 
 const createPokeCard = (name, imgSrc, abilities, stats) => {
   const gallery = document.querySelector(".pokemon-gallery");
