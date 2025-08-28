@@ -42,10 +42,11 @@ const createPokeCard = (name, imgSrc, abilities, stats) => {
   const card = document.createElement("div");
   card.className = "pokemon-card";
 
-  const title = document.createElement("div");
-  title.className = "pokemon-title";
-  title.textContent = name;
+  const heading = document.createElement("div");
+  heading.className = "pokemon-heading";
 
+  const title = document.createElement("h2");
+  title.textContent = name;
   const favorite = document.createElement("i");
   favorite.classList.add("fa-solid", "fa-heart");
 
@@ -63,7 +64,8 @@ const createPokeCard = (name, imgSrc, abilities, stats) => {
   pokeStats.textContent = stats;
 
   details.append(pokeAbilities, pokeStats);
-  card.append(title, favorite, image, details);
+  heading.append(title, favorite);
+  card.append(heading, image, details);
   gallery.append(card);
 };
 
