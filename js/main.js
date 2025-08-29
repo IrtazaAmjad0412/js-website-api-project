@@ -12,21 +12,41 @@ const getPokemonData = async () => {
     const data = await response.json();
     detailedPokeArr.push(data);
   }
-  console.log(detailedPokeArr);
   return detailedPokeArr;
 };
 
-const capitalizeFirstLetter = (data) => {
-  return data[0].toUpperCase() + data.slice(1);
-};
+const capitalizeFirstLetter = (data) => data[0].toUpperCase() + data.slice(1);
 
 const getAbilities = (data) =>
   `Abilities: ${data.map((ability) => ability.ability.name).join(", ")}`;
 
 const getStats = (data) => `Stats: ${data.map((stat) => stat.base_stat).join(" ")}`;
 
-const createPokeCard = (name, imgSrc, abilities, stats) => {
-  const gallery = document.querySelector(".pokemon-gallery");
+const getFavorites = () => JSON.parse(localStorage.getItem("favorites")) || [];
+
+const setFavorites = (favorites) =>
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+
+const addFavorite = (name, imgSrc, abilities, stats) => {
+  const favorites = getFavorites();
+  if (!favorites.some((pokemon) => pokemon.name === name)) {
+    favorites.push({ name, imgSrc, abilities, stats });
+    setFavorites(favorites);
+  }
+};
+
+const removeFavorite = (name) =>
+  setFavorites(getFavorites().filter((pokemon) => pokemon.name !== name));
+
+const createPokeCard = (name, imgSrc, abilities, stats, isFavoritePage = false) => {
+  const pokemonGallery = document.querySelector(".pokemon-gallery");
+  const favoritesGallery = document.querySelector(".favorites-gallery");
+  const activeGallery = isFavoritePage ? favoritesGallery : pokemonGallery;
+
+  if (!activeGallery) {
+    console.warn("No gallery found to append the card!");
+    return;
+  }
 
   const card = document.createElement("div");
   card.className = "pokemon-card";
@@ -37,7 +57,26 @@ const createPokeCard = (name, imgSrc, abilities, stats) => {
   const title = document.createElement("h2");
   title.textContent = name;
   const favorite = document.createElement("i");
-  favorite.classList.add("fa-solid", "fa-heart");
+
+  isFavoritePage
+    ? favorite.classList.add("fa-solid", "fa-xmark")
+    : favorite.classList.add("fa-solid", "fa-heart");
+
+  if (!isFavoritePage) {
+    favorite.addEventListener("click", () => {
+      const favorites = getFavorites();
+      if (favorites.some((pokemon) => pokemon.name === name)) {
+        removeFavorite(name);
+        favorite.classList.add("fa-xmark");
+        favorite.classList.remove("fa-heart");
+      } else {
+        addFavorite(name, imgSrc, abilities, stats);
+        favorite.classList.remove("fa-heart");
+        favorite.classList.add("fa-xmark");
+        card.remove();
+      }
+    });
+  }
 
   const image = document.createElement("img");
   image.className = "pokemon-image";
@@ -55,19 +94,40 @@ const createPokeCard = (name, imgSrc, abilities, stats) => {
   details.append(pokeAbilities, pokeStats);
   heading.append(title, favorite);
   card.append(heading, image, details);
-  gallery.append(card);
+  activeGallery.append(card);
 };
 
 const loadAndDisplayPokemon = async () => {
-  const detailedPokeArr = await getPokemonData();
-  detailedPokeArr.forEach((cardData) =>
-    createPokeCard(
-      capitalizeFirstLetter(cardData.name),
-      cardData.sprites.other["official-artwork"].front_default,
-      getAbilities(cardData.abilities),
-      getStats(cardData.stats)
-    )
-  );
+  const onPokedexPage = !!document.querySelector(".pokemon-gallery");
+  if (onPokedexPage) {
+    const detailedPokeArr = await getPokemonData();
+    const favorites = getFavorites();
+    detailedPokeArr
+      .filter(
+        (cardData) =>
+          !favorites.some((pokemon) => pokemon.name.toLowerCase() === cardData.name)
+      )
+      .forEach((cardData) =>
+        createPokeCard(
+          capitalizeFirstLetter(cardData.name),
+          cardData.sprites.other["official-artwork"].front_default,
+          getAbilities(cardData.abilities),
+          getStats(cardData.stats),
+          false
+        )
+      );
+  } else {
+    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+    favorites.forEach((cardData) =>
+      createPokeCard(
+        cardData.name,
+        cardData.imgSrc,
+        cardData.abilities,
+        cardData.stats,
+        true
+      )
+    );
+  }
 };
 
 loadAndDisplayPokemon();

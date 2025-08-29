@@ -103,7 +103,8 @@
   background-color: #feca1b;
 }
 
-.pokemon-gallery {
+.pokemon-gallery,
+.favorites-gallery {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
