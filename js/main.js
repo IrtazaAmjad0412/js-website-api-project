@@ -29,7 +29,7 @@ const setFavorites = (favorites) =>
 
 const addFavorite = (name, imgSrc, abilities, stats) => {
   const favorites = getFavorites();
-  if (!favorites.some((pokemon) => pokemon.name === name)) {
+  if (favorites.filter((pokemon) => pokemon.name === name).length === 0) {
     favorites.push({ name, imgSrc, abilities, stats });
     setFavorites(favorites);
   }
@@ -44,7 +44,7 @@ const createPokeCard = (name, imgSrc, abilities, stats, isFavoritePage = false) 
   const activeGallery = isFavoritePage ? favoritesGallery : pokemonGallery;
 
   if (!activeGallery) {
-    console.warn("No gallery found to append the card!");
+    console.warn("No gallery found!");
     return;
   }
 
@@ -62,21 +62,15 @@ const createPokeCard = (name, imgSrc, abilities, stats, isFavoritePage = false) 
     ? favorite.classList.add("fa-solid", "fa-xmark")
     : favorite.classList.add("fa-solid", "fa-heart");
 
-  if (!isFavoritePage) {
-    favorite.addEventListener("click", () => {
-      const favorites = getFavorites();
-      if (favorites.some((pokemon) => pokemon.name === name)) {
-        removeFavorite(name);
-        favorite.classList.add("fa-xmark");
-        favorite.classList.remove("fa-heart");
-      } else {
-        addFavorite(name, imgSrc, abilities, stats);
-        favorite.classList.remove("fa-heart");
-        favorite.classList.add("fa-xmark");
-        card.remove();
-      }
-    });
-  }
+  favorite.addEventListener("click", () => {
+    const favorites = getFavorites();
+    if (favorites.some((pokemon) => pokemon.name === name)) {
+      removeFavorite(name);
+    } else {
+      addFavorite(name, imgSrc, abilities, stats);
+    }
+    card.remove();
+  });
 
   const image = document.createElement("img");
   image.className = "pokemon-image";
@@ -98,10 +92,10 @@ const createPokeCard = (name, imgSrc, abilities, stats, isFavoritePage = false) 
 };
 
 const loadAndDisplayPokemon = async () => {
-  const onPokedexPage = !!document.querySelector(".pokemon-gallery");
-  if (onPokedexPage) {
+  const isPokedexPage = !!document.querySelector(".pokemon-gallery");
+  const favorites = getFavorites();
+  if (isPokedexPage) {
     const detailedPokeArr = await getPokemonData();
-    const favorites = getFavorites();
     detailedPokeArr
       .filter(
         (cardData) =>
@@ -117,7 +111,6 @@ const loadAndDisplayPokemon = async () => {
         )
       );
   } else {
-    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
     favorites.forEach((cardData) =>
       createPokeCard(
         cardData.name,
