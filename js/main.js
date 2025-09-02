@@ -7,11 +7,13 @@ const getThirtyPokemon = async () => {
 const getPokemonData = async () => {
   const basicPokeArr = await getThirtyPokemon();
   const detailedPokeArr = [];
+
   for (const pokemon of basicPokeArr) {
     const response = await fetch(pokemon.url);
     const data = await response.json();
     detailedPokeArr.push(data);
   }
+
   return detailedPokeArr;
 };
 
@@ -39,9 +41,9 @@ const removeFavorite = (name) =>
   setFavorites(getFavorites().filter((pokemon) => pokemon.name !== name));
 
 const createPokeCard = (name, imgSrc, abilities, stats, isFavoritePage = false) => {
-  const pokemonGallery = document.querySelector(".pokemon-gallery");
-  const favoritesGallery = document.querySelector(".favorites-gallery");
-  const activeGallery = isFavoritePage ? favoritesGallery : pokemonGallery;
+  const activeGallery = isFavoritePage
+    ? document.querySelector(".favorites-gallery")
+    : document.querySelector(".pokemon-gallery");
 
   if (!activeGallery) {
     console.warn("No gallery found!");
@@ -94,6 +96,7 @@ const createPokeCard = (name, imgSrc, abilities, stats, isFavoritePage = false) 
 const loadAndDisplayPokemon = async () => {
   const isPokedexPage = !!document.querySelector(".pokemon-gallery");
   const favorites = getFavorites();
+
   if (isPokedexPage) {
     const detailedPokeArr = await getPokemonData();
     detailedPokeArr
@@ -122,5 +125,57 @@ const loadAndDisplayPokemon = async () => {
     );
   }
 };
+
+const sortPokemon = async (direction) => {
+  const pokemonGallery = document.querySelector(".pokemon-gallery");
+  const favoritesGallery = document.querySelector(".favorites-gallery");
+  const favorites = getFavorites();
+
+  if (pokemonGallery) {
+    const favoriteNames = favorites.map((pokemon) => pokemon.name.toLowerCase());
+    const pokemonArr = await getPokemonData();
+    pokemonGallery.innerHTML = "";
+    pokemonArr
+      .filter((pokemon) => !favoriteNames.includes(pokemon.name.toLowerCase()))
+      .sort((a, b) =>
+        direction === "asc" ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+      )
+      .forEach((pokemon) => {
+        createPokeCard(
+          capitalizeFirstLetter(pokemon.name),
+          pokemon.sprites.other["official-artwork"].front_default,
+          getAbilities(pokemon.abilities),
+          getStats(pokemon.stats),
+          false
+        );
+      });
+  } else if (favoritesGallery) {
+    favoritesGallery.innerHTML = "";
+    favorites
+      .sort((a, b) =>
+        direction === "asc" ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+      )
+      .forEach((pokemon) => {
+        createPokeCard(
+          pokemon.name,
+          pokemon.imgSrc,
+          pokemon.abilities,
+          pokemon.stats,
+          true
+        );
+      });
+  } else {
+    console.warn("No gallery found!");
+  }
+};
+
+const sortBtns = document.querySelectorAll(".sort-btn");
+
+sortBtns.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    const sortDir = e.target.dataset.sortdir;
+    sortPokemon(sortDir);
+  });
+});
 
 loadAndDisplayPokemon();

@@ -176,3 +176,28 @@
   color: #feca1b;
   font-size: 0.9rem;
 }
+
+.sort {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.sort-buttons {
+  padding: 15px;
+  border-radius: 6px;
+  color: #feca1b;
+  background-color: #3761a8;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.1rem;
+}
+
+.sort-btn {
+  padding: 4px;
+  border-radius: 6px;
+  border: 1px solid #3761a8;
+  color: #3761a8;
+  background-color: #feca1b;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
