@@ -197,24 +197,28 @@ const getPrimaryTypeCount = async () => {
   return primaryTypeCount;
 };
 
-const displayPrimaryTypeCount = async () => {
-  const countObj = await getPrimaryTypeCount();
-  const main = document.querySelector("main");
+const pokemonGallery = document.querySelector(".pokemon-gallery");
 
-  const display = document.createElement("div");
-  display.className = "display";
+if (pokemonGallery) {
+  const displayPrimaryTypeCount = async () => {
+    const countObj = await getPrimaryTypeCount();
+    const main = document.querySelector("main");
 
-  const displayText = document.createElement("div");
-  displayText.className = "display-text";
+    const display = document.createElement("div");
+    display.className = "display";
 
-  Object.entries(countObj).forEach(([type, num]) => {
-    const count = document.createElement("p");
-    count.textContent = `${type[0].toUpperCase() + type.slice(1)}: ${num}`;
-    displayText.append(count);
-  });
+    const displayText = document.createElement("div");
+    displayText.className = "display-text";
 
-  display.append(displayText);
-  main.prepend(display);
-};
+    Object.entries(countObj).forEach(([type, num]) => {
+      const count = document.createElement("p");
+      count.textContent = `${type[0].toUpperCase() + type.slice(1)}: ${num}`;
+      displayText.append(count);
+    });
 
-displayPrimaryTypeCount();
+    display.append(displayText);
+    main.prepend(display);
+  };
+
+  displayPrimaryTypeCount();
+}
