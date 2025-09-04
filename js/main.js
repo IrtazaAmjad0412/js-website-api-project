@@ -31,6 +31,7 @@ const setFavorites = (favorites) =>
 
 const addFavorite = (name, imgSrc, abilities, stats) => {
   const favorites = getFavorites();
+
   if (favorites.filter((pokemon) => pokemon.name === name).length === 0) {
     favorites.push({ name, imgSrc, abilities, stats });
     setFavorites(favorites);
@@ -66,6 +67,7 @@ const createPokeCard = (name, imgSrc, abilities, stats, isFavoritePage = false) 
 
   favorite.addEventListener("click", () => {
     const favorites = getFavorites();
+
     if (favorites.some((pokemon) => pokemon.name === name)) {
       removeFavorite(name);
     } else {
@@ -179,3 +181,21 @@ sortBtns.forEach((btn) => {
 });
 
 loadAndDisplayPokemon();
+
+const getPrimaryTypeCount = async () => {
+  const pokemonArr = await getPokemonData();
+  const pokemonTypes = ["normal", "poison", "bug"];
+  const primaryTypeCount = Object.fromEntries(pokemonTypes.map((type) => [type, 0]));
+
+  pokemonArr.forEach((pokemon) => {
+    const primaryType = pokemon.types[0].type.name;
+    if (pokemonTypes.includes(primaryType)) {
+      primaryTypeCount[primaryType]++;
+    }
+  });
+
+  console.log(primaryTypeCount);
+  return primaryTypeCount;
+};
+
+getPrimaryTypeCount();
