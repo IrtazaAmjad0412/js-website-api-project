@@ -175,7 +175,7 @@ const sortBtns = document.querySelectorAll(".sort-btn");
 
 sortBtns.forEach((btn) => {
   btn.addEventListener("click", (e) => {
-    const sortDir = e.target.dataset.sortdir;
+    const sortDir = e.target.dataset.sortDir;
     sortPokemon(sortDir);
   });
 });
@@ -194,8 +194,27 @@ const getPrimaryTypeCount = async () => {
     }
   });
 
-  console.log(primaryTypeCount);
   return primaryTypeCount;
 };
 
-getPrimaryTypeCount();
+const displayPrimaryTypeCount = async () => {
+  const countObj = await getPrimaryTypeCount();
+  const main = document.querySelector("main");
+
+  const display = document.createElement("div");
+  display.className = "display";
+
+  const displayText = document.createElement("div");
+  displayText.className = "display-text";
+
+  Object.entries(countObj).forEach(([type, num]) => {
+    const count = document.createElement("p");
+    count.textContent = `${type[0].toUpperCase() + type.slice(1)}: ${num}`;
+    displayText.append(count);
+  });
+
+  display.append(displayText);
+  main.prepend(display);
+};
+
+displayPrimaryTypeCount();
