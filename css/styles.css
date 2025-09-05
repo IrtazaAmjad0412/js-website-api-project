@@ -65,13 +65,14 @@
 
 .nav-buttons {
   display: flex;
-  gap: 6rem;
-  width: 40%;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-width: 100%;
 }
 
 .main-menu-navbar .nav-buttons {
   position: absolute;
-  top: 75%;
+  top: 78%;
   left: 50%;
   transform: translate(-50%, -50%);
   justify-content: center;
@@ -215,4 +216,20 @@
   background-color: #feca1b;
   font-size: 0.9rem;
   cursor: pointer;
+}
+
+@media (max-width: 551px) {
+  .main-menu-navbar .nav-header {
+    font-size: 4rem;
+  }
+
+  .main-menu-navbar .nav-buttons {
+    top: 82%;
+    max-width: 9rem;
+  }
+
+  .pokedex-navbar,
+  .favorites-navbar {
+    flex-direction: column;
+  }
 }
